@@ -1,0 +1,38 @@
+<script setup>
+import RTE from "./components/RTE.vue";
+import LoginComponent from "./components/LoginComponent.vue";
+import ProfileView from "./components/ProfileView.vue";
+import DocumentSidebar from "./components/DocumentSidebar.vue";
+import {onMounted, ref} from "vue";
+const show_rte = ref(false);
+const show_login = ref(true);
+const show_profile_view = ref(false);
+const show_document_sidebar = ref(true);
+onMounted(() => {
+  if (localStorage.getItem("token")) {
+    show_login.value = false;
+  }
+});
+</script>
+
+<template>
+  <div class="w-full h-screen bg-slate-900">
+    <div class="w-full bg-slate-800 flex justify-between items-center">
+      <h1 class="text-3xl p-5 text-white">T4-Documents</h1>
+      <div class="text-xl text-white flex justify-center items-center gap-5 mr-5">
+        <button @click="show_profile_view = !show_profile_view" class="bg-blue-600 rounded p-2">Profile</button>
+        <button @click="show_login = !show_login" class="bg-blue-600 rounded p-2">Login/Register</button>
+      </div>
+    </div>
+    <div class="flex w-full" v-if="show_document_sidebar">
+      <DocumentSidebar ref="docside"></DocumentSidebar>
+    </div>
+  </div>
+  <LoginComponent v-if="show_login" @close-login-widget="show_login = false" @user-logged-in="this.$refs.docside.load()"/>
+  <ProfileView v-if="show_profile_view" @close-profile-view="show_profile_view = false" @click="show_profile_view"/>
+<RTE v-if="show_rte"/>
+</template>
+
+<style scoped>
+
+</style>
