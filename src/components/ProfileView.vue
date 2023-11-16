@@ -16,6 +16,7 @@ const passwordchange = ref(false);
 const old_pw = ref("");
 const new_pw = ref("");
 const new_pw_confirm = ref("");
+const user_id = ref(localStorage.getItem("user_id"));
 
 onMounted(()=>{
   console.log("mounted")
@@ -76,7 +77,6 @@ function updatePassword() {
   let tempurl = "http://localhost:10001/auth/password/" + localStorage.getItem("user_id");
   axios({
     method: "patch",
-    withCredentials: true,
     url: tempurl,
     headers: {
       "X-Auth-Token": localStorage.getItem("token")
@@ -87,6 +87,7 @@ function updatePassword() {
     },
   }).then((res) => {
     console.log(res.data);
+    passwordchange.value = false;
   }).catch((err) => {
     console.log(err);
   });
@@ -107,7 +108,7 @@ function updatePassword() {
         <button @click="updatePassword" class="bg-blue-600 p-3 rounded w-full">Update password</button>
       </div>
     </div>
-    <div v-else class="w-2/3 h-2/3 bg-slate-900 p-10 text-white relative rounded">
+    <div v-else class="w-2/3 h-2/3 bg-slate-800 p-10 text-white relative rounded">
       <h2 class="text-3xl text-white mb-5">Profile</h2>
       <div v-if="editmode" class="flex flex-col gap-5">
         <input class="p-3 text-white bg-slate-700 w-full" v-model="firstname" placeholder="First name"/>
@@ -115,9 +116,10 @@ function updatePassword() {
         <input class="p-3 text-white bg-slate-700 w-full" v-model="email" placeholder="E-Mail"/>
       </div>
       <div v-else class="flex flex-col gap-5">
-        <p class="p-3 text-white bg-slate-800 w-full">First name: {{firstname}}</p>
-        <p class="p-3 text-white bg-slate-800 w-full">Last name: {{lastname}}</p>
-        <p class="p-3 text-white bg-slate-800 w-full">E-Mail: {{email}}</p>
+        <p class="p-3 text-white bg-slate-700 w-full">First name: {{firstname}}</p>
+        <p class="p-3 text-white bg-slate-700 w-full">Last name: {{lastname}}</p>
+        <p class="p-3 text-white bg-slate-700 w-full">E-Mail: {{email}}</p>
+        <p class="p-3 text-white bg-slate-700 w-full">Your Share-ID: {{user_id}}</p>
       </div>
       <div class="flex absolute right-5 bottom-5 gap-5 justify-between w-1/4">
         <button @click="()=> {if (editmode) {save();}editmode = !editmode; }" class="bg-blue-600 p-3 rounded w-full">{{ editop }}</button>
