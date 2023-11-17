@@ -1,7 +1,9 @@
 <script setup>
 import {computed, onMounted, ref, defineEmits} from "vue";
 import axios from "axios";
+import {useToast} from "vue-toast-notification";
 
+const $toast = useToast();
 defineEmits(["close-profile-view"]);
 const firstname = ref("");
 const lastname = ref("");
@@ -37,6 +39,7 @@ onMounted(()=>{
     firstname.value = userdata.user_firstname;
     lastname.value = userdata.user_lastname;
     email.value = userdata.user_email;
+    $toast.info("Loaded user data");
   }).catch((err) => {
     console.log(err);
   });
@@ -61,6 +64,7 @@ function save() {
     }
   }).then((res) => {
     console.log(res.data);
+    $toast.success("Saved user data");
   }).catch((err) => {
     console.log(err);
   });
@@ -88,6 +92,7 @@ function updatePassword() {
   }).then((res) => {
     console.log(res.data);
     passwordchange.value = false;
+    $toast.success("Password updated");
   }).catch((err) => {
     console.log(err);
   });

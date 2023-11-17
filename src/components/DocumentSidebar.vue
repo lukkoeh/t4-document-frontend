@@ -1,6 +1,7 @@
 <script setup>
 import {ref, defineExpose, defineEmits, onMounted} from "vue";
 import axios from "axios";
+import {useToast} from "vue-toast-notification";
 
 const documents = ref({});
 const newdocname = ref("");
@@ -8,6 +9,7 @@ const document_dialog = ref(false);
 const share_dialog = ref(false);
 const current_share_doc_id = ref(0);
 const target_share_id = ref(0);
+const $toast = useToast();
 defineExpose({load});
 const emit = defineEmits(["select-document"]);
 
@@ -33,6 +35,7 @@ function load() {
     }).then((res) => {
       console.log(res.data);
       documents.value = res.data;
+      $toast.info("Updated documents list");
     }).catch((err) => {
       console.log(err);
     });
@@ -59,6 +62,7 @@ function createDocument() {
       load();
       document_dialog.value = false;
       newdocname.value = "";
+      $toast.success("Document created");
     }).catch((err) => {
       console.log(err);
     });
@@ -79,6 +83,7 @@ function removeDocument(id) {
       }
     }).then((res) => {
       console.log(res.data);
+      $toast.success("Document deleted");
       load();
     }).catch((err) => {
       console.log(err);

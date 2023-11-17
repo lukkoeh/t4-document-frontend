@@ -2,6 +2,7 @@
 import {onMounted, ref, defineExpose} from "vue";
 import axios from "axios";
 import {Delta} from "@vueup/vue-quill";
+import {useToast} from "vue-toast-notification";
 const current_document = ref(0);
 const current_document_title = ref("Test");
 const quilleditor = ref(null);
@@ -44,6 +45,8 @@ function loadDocument(doc) {
     console.log(newdelta);
     // set the editor contents to the newdelta
     quilleditor.value.setContents(newdelta, "api");
+    const $toast = useToast();
+    $toast.success("Document loaded");
   }).catch(() => {
     console.log("error");
   });

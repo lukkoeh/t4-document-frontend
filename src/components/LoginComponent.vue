@@ -1,12 +1,15 @@
 <script setup>
 import {ref, defineEmits} from "vue";
 import axios from "axios";
+import {useToast} from "vue-toast-notification";
 const emit = defineEmits(["user-logged-in", "close-login-widget"]);
 const password = ref("");
 const email = ref("");
 const token = ref("");
 const firstname = ref("");
 const lastname = ref("");
+
+const $toast = useToast();
 
 function login() {
   let formdata = new FormData();
@@ -27,6 +30,7 @@ function login() {
     // emit logged in event
     emit("user-logged-in");
     emit("close-login-widget");
+    $toast.success("Logged in as " + res.data.user_id);
   }).catch((err) => {
     console.log(err);
   })
@@ -50,6 +54,7 @@ function register() {
     if (res.data.user_id) {
       localStorage.setItem("user_id", res.data.user_id);
     }
+    $toast.success("Registered user " + res.data.user_id);
     // instantly obtain a token for the newly created user
     login();
   }).catch((err) => {

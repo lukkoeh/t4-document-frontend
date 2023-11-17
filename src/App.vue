@@ -4,13 +4,16 @@ import LoginComponent from "./components/LoginComponent.vue";
 import ProfileView from "./components/ProfileView.vue";
 import DocumentSidebar from "./components/DocumentSidebar.vue";
 import {onMounted, ref} from "vue";
+import {useToast} from "vue-toast-notification";
 const show_rte = ref(true);
 const show_login = ref(true);
 const show_profile_view = ref(false);
 const show_document_sidebar = ref(true);
+const $toast = useToast();
 onMounted(() => {
   if (localStorage.getItem("token")) {
     show_login.value = false;
+    $toast.success("You are logged in as " + localStorage.getItem("user_id"));
   }
 });
 </script>
@@ -26,6 +29,7 @@ onMounted(() => {
     </div>
     <div class="flex w-full h-5/6" v-if="show_document_sidebar">
       <DocumentSidebar @select-document="(document) => {
+        $toast.info('Loading document: ' + document.document_title);
         this.$refs.rte.loadDocument(document)
       }" ref="docside"></DocumentSidebar>
       <div class="h-full w-full flex justify-center items-center">
