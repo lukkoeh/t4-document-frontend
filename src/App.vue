@@ -5,7 +5,7 @@ import ProfileView from "./components/ProfileView.vue";
 import DocumentSidebar from "./components/DocumentSidebar.vue";
 import {onMounted, ref} from "vue";
 import {useToast} from "vue-toast-notification";
-const show_rte = ref(true);
+const show_rte = ref(false);
 const show_login = ref(true);
 const show_profile_view = ref(false);
 const show_document_sidebar = ref(true);
@@ -29,11 +29,12 @@ onMounted(() => {
     </div>
     <div class="flex w-full h-5/6" v-if="show_document_sidebar">
       <DocumentSidebar @select-document="(document) => {
-        $toast.info('Loading document: ' + document.document_title);
+        $toast.info('Loading document (fast-forward): ' + document.document_title);
+        show_rte = true;
         this.$refs.rte.loadDocument(document)
       }" ref="docside"></DocumentSidebar>
       <div class="h-full w-full flex justify-center items-center">
-        <RTE ref="rte" v-if="show_rte"/>
+        <RTE ref="rte" v-show="show_rte"/>
       </div>
     </div>
   </div>

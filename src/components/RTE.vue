@@ -3,20 +3,65 @@ import {onMounted, ref, defineExpose} from "vue";
 import axios from "axios";
 import {Delta} from "@vueup/vue-quill";
 import {useToast} from "vue-toast-notification";
+
 const current_document = ref(0);
 const current_document_title = ref("Test");
 const quilleditor = ref(null);
 const token = ref(localStorage.getItem("token"));
 const user_id = ref(localStorage.getItem("user_id"));
+const socket_connection = ref(null);
+const $toast = useToast();
 defineExpose({loadDocument});
-onMounted(()=> {
-  quilleditor.value.setContents(new Delta(), "api");
+onMounted(() => {
 });
+
+function editorReady() {
+  quilleditor.value.setContents(new Delta(), "api");
+  socket_connection.value = new WebSocket("ws://localhost:8082");
+  socket_connection.value.onmessage = (event) => {
+    // parse the message into JSON
+    let message = "";
+    try {
+      message = JSON.parse(event.data);
+    } catch (e) {
+      $toast.error("Received an answer that is not json");
+      return;
+    }
+    // check the
+    if (message.code === 200 && message.action === "information") {
+      $toast.info("Socket responded with success string");
+    } else if (message.code === 200) {
+      console.warn("merging");
+      // merge the delta of the editor (full) with the received delta
+      let fulldelta = quilleditor.value.getContents();
+      let newdelta = fulldelta.compose(new Delta(message.payload));
+      console.log("New Delta: " + newdelta);
+      quilleditor.value.setContents(newdelta, "api");
+    }
+    else {
+      $toast.error("Received invalid answer");
+    }
+    console.log(message)
+  }
+  socket_connection.value.onopen = () => {
+    $toast.info("Socket connection established");
+    console.log("opened");
+    // create json with document_selection with documentid and the token
+  }
+  socket_connection.value.onclose = () => {
+    $toast.info("Socket connection was closed");
+  }
+  socket_connection.value.onerror = () => {
+    $toast.error("Socket connection error");
+    console.log("error")
+  }
+}
 
 function resetQuill() {
   console.log("trying to reset")
   quilleditor.value.setContents(new Delta(), "api");
 }
+
 function loadDocument(doc) {
   //load the document and integrate all existing deltas from the db into the editor
   resetQuill();
@@ -47,6 +92,14 @@ function loadDocument(doc) {
     quilleditor.value.setContents(newdelta, "api");
     const $toast = useToast();
     $toast.success("Document loaded");
+    let data = JSON.stringify({
+      token: token.value,
+      document_selection: current_document.value
+    });
+    console.log(data)
+    // send the json to the socket
+    socket_connection.value.send(data);
+    $toast.success("Document selected for live session")
   }).catch(() => {
     console.log("error");
   });
@@ -58,30 +111,20 @@ function editorChanged(delta) {
   if (delta.source === "api") {
     return;
   }
-  console.log(quilleditor.value.getContents());
-  // send the delta to the server
-  let tempurl = "http://localhost:10001/delta/" + current_document.value;
-  let formdata = new FormData();
-  formdata.append("delta", JSON.stringify(delta.delta));
-  axios({
-    method: "post",
-    url: tempurl,
-    data: formdata,
-    headers: {
-      "X-Auth-Token": token.value
-    }
-  }).then((res) => {
-    console.log(res.data);
-  }).catch((err) => {
-    console.log(err);
+  let data = JSON.stringify({
+    token: token.value,
+    document_id: current_document.value,
+    payload: delta.delta
   });
+  console.log(data)
+  socket_connection.value.send(data);
 }
 </script>
 
 <template>
   <div class="flex flex-col w-full h-full text-white">
-    <h1 class="text-3xl m-5">Editing Document: {{current_document_title}}</h1>
-    <QuillEditor ref="quilleditor" @textChange="(delta)=> {editorChanged(delta)}"></QuillEditor>
+    <h1 class="text-3xl m-5">Editing Document: {{ current_document_title }}</h1>
+    <QuillEditor @ready="editorReady" ref="quilleditor" @textChange="(delta)=> {editorChanged(delta)}"></QuillEditor>
   </div>
 </template>
 

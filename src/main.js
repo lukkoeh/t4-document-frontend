@@ -9,6 +9,6 @@ import "vue-toast-notification/dist/theme-bootstrap.css";
 const app = createApp(App)
 app.component("QuillEditor", QuillEditor)
 app.use(ToastPlugin, {
-    duration: 5000,
+    duration: 8000,
 })
 app.mount('#app')

@@ -125,6 +125,7 @@ function updatePassword() {
         <p class="p-3 text-white bg-slate-700 w-full">Last name: {{lastname}}</p>
         <p class="p-3 text-white bg-slate-700 w-full">E-Mail: {{email}}</p>
         <p class="p-3 text-white bg-slate-700 w-full">Your Share-ID: {{user_id}}</p>
+        <p class="text-white w-full">Tip: Use this Share-ID to get Documents from other Users</p>
       </div>
       <div class="flex absolute right-5 bottom-5 gap-5 justify-between w-1/4">
         <button @click="()=> {if (editmode) {save();}editmode = !editmode; }" class="bg-blue-600 p-3 rounded w-full">{{ editop }}</button>

@@ -33,6 +33,12 @@ function load() {
         "X-Auth-Token": localStorage.getItem("token")
       }
     }).then((res) => {
+      // if response code is 404, the user has no documents, directly create one
+      if (res.status === 404) {
+        $toast.info("No documents found, creating one");
+        createDocument();
+        return;
+      }
       console.log(res.data);
       documents.value = res.data;
       $toast.info("Updated documents list");
@@ -145,7 +151,7 @@ function changeDocument(doc) {
       </div>
     </div>
   </div>
-  <div v-if="share_dialog" class="fixed left-0 top-0 w-full h-full flex items-center justify-center">
+  <div v-if="share_dialog" class="fixed left-0 top-0 w-full h-full flex items-center justify-center z-40">
     <div class="bg-slate-700 w-1/2 h-1/3 p-5 flex flex-col justify-center gap-5">
       <h2 class="text-white text-3xl">Share this Document: {{current_share_doc_id}}</h2>
       <p class="text-white">Tip: People can find their share ID in their Profile View.</p>
