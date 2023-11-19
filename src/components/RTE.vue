@@ -69,6 +69,14 @@ function loadDocument(doc) {
   console.log(user_id.value);
   current_document.value = doc.document_id;
   current_document_title.value = doc.document_title;
+  let data = JSON.stringify({
+    token: token.value,
+    document_selection: current_document.value
+  });
+  console.log(data)
+  // send the json to the socket
+  socket_connection.value.send(data);
+  $toast.success("Document selected for live session")
   let tempurl = "http://localhost:10001/deltas/" + doc.document_id;
   axios({
     method: "get",
@@ -78,14 +86,6 @@ function loadDocument(doc) {
     }
   }).then((res) => {
     // if there are no deltas, just use a blank editor
-    let data = JSON.stringify({
-      token: token.value,
-      document_selection: current_document.value
-    });
-    console.log(data)
-    // send the json to the socket
-    socket_connection.value.send(data);
-    $toast.success("Document selected for live session")
     if (res.data.length === 0) {
       console.log("no deltas");
     }
