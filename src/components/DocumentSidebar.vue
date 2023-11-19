@@ -158,7 +158,7 @@ function changeDocument(doc) {
       <p class="text-white">Tip: People can find their share ID in their Profile View.</p>
       <input class="p-3 text-white bg-slate-800 w-full" v-model="target_share_id" placeholder="Target Share ID"/>
       <div class="flex justify-between">
-        <button @click="document_dialog = false" class="w-1/3 bg-blue-600 text-white p-3 rounded">Cancel</button>
+        <button @click="share_dialog = false" class="w-1/3 bg-blue-600 text-white p-3 rounded">Cancel</button>
         <button @click="shareDocument" class="w-1/3 bg-blue-600 text-white p-3 rounded">Share</button>
       </div>
     </div>

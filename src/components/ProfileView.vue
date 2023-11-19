@@ -100,7 +100,7 @@ function updatePassword() {
 </script>
 
 <template>
-  <div class="flex w-screen h-screen justify-center items-center fixed left-0 top-0">
+  <div class="flex w-screen h-screen justify-center items-center fixed left-0 top-0 z-40">
     <div v-if="passwordchange" class="w-2/3 h-2/3 bg-slate-900 p-10 text-white relative rounded">
       <h2 class="text-3xl text-white mb-5">Change Password</h2>
       <div class="flex flex-col gap-5">
