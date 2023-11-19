@@ -19,6 +19,10 @@ const old_pw = ref("");
 const new_pw = ref("");
 const new_pw_confirm = ref("");
 const user_id = ref(localStorage.getItem("user_id"));
+const u_sure = ref(false);
+const deletemode_button = computed(()=> {
+  return u_sure.value ? "DO IT NOW" : "Delete Account";
+})
 
 onMounted(()=>{
   console.log("mounted")
@@ -97,6 +101,30 @@ function updatePassword() {
     console.log(err);
   });
 }
+
+function handleAccountDeletion() {
+  u_sure.value = !u_sure.value;
+  if (u_sure.value) {
+    return;
+  }else {
+    let tempurl = "http://localhost:10001/user/" + localStorage.getItem("user_id");
+    axios({
+      method: "delete",
+      url: tempurl,
+      headers: {
+        "X-Auth-Token": localStorage.getItem("token")
+      }
+    }).then((res) => {
+      console.log(res.data);
+      $toast.success("Account deleted");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user_id");
+      window.location.reload();
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+}
 </script>
 
 <template>
@@ -132,7 +160,7 @@ function updatePassword() {
         <button @click="this.$emit('close-profile-view')" class="bg-blue-600 p-3 rounded w-full">Close</button>
       </div>
       <div class="flex absolute left-5 bottom-5 gap-5 justify-between w-1/3">
-        <button class="bg-red-600 p-3 rounded w-full">Delete Account</button>
+        <button class="bg-red-600 p-3 rounded w-full" @click="handleAccountDeletion">{{ deletemode_button }}</button>
         <button @click="passwordchange = !passwordchange" class="bg-red-600 p-3 rounded w-full">Update Password</button>
       </div>
     </div>
