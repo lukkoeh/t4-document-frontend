@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, defineExpose} from "vue";
+import {ref, defineExpose, onMounted} from "vue";
 import axios from "axios";
 import {Delta} from "@vueup/vue-quill";
 import {useToast} from "vue-toast-notification";
@@ -12,12 +12,12 @@ const user_id = ref(localStorage.getItem("user_id"));
 const socket_connection = ref(null);
 const $toast = useToast();
 defineExpose({loadDocument});
-onMounted(() => {
-});
-
+onMounted(()=> {
+  console.log("RTE Mounted")
+})
 function editorReady() {
   quilleditor.value.setContents(new Delta(), "api");
-  socket_connection.value = new WebSocket("ws://localhost:8082");
+  socket_connection.value = new WebSocket("ws://host.docker.internal:10002");
   socket_connection.value.onmessage = (event) => {
     // parse the message into JSON
     let message = "";
@@ -77,7 +77,7 @@ function loadDocument(doc) {
   // send the json to the socket
   socket_connection.value.send(data);
   $toast.success("Document selected for live session")
-  let tempurl = "http://localhost:10001/deltas/" + doc.document_id;
+  let tempurl = "http://host.docker.internal:10001/deltas/" + doc.document_id;
   axios({
     method: "get",
     url: tempurl,

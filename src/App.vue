@@ -11,6 +11,7 @@ const show_profile_view = ref(false);
 const show_document_sidebar = ref(true);
 const $toast = useToast();
 const logged_in = ref(false);
+const rte = ref(null);
 onMounted(() => {
   if (localStorage.getItem("token")) {
     show_login.value = false;
@@ -26,6 +27,12 @@ function logoutuser() {
   show_login.value = true;
   logged_in.value = false;
 }
+
+function documentSelected(document) {
+  $toast.info('Loading document (fast-forward): ' + document.document_title);
+  show_rte.value = true;
+  rte.value.loadDocument(document);
+}
 </script>
 
 <template>
@@ -38,12 +45,8 @@ function logoutuser() {
         <button v-else @click="show_login = !show_login" class="bg-blue-600 rounded p-2">Login/Register</button>
       </div>
     </div>
-    <div class="flex w-full h-calc z-10 absolute top-200" v-if="show_document_sidebar">
-      <DocumentSidebar @select-document="(document) => {
-        $toast.info('Loading document (fast-forward): ' + document.document_title);
-        show_rte = true;
-        this.$refs.rte.loadDocument(document)
-      }" ref="docside"></DocumentSidebar>
+    <div class="flex w-full h-calc z-10 absolute top-200" v-show="show_document_sidebar">
+      <DocumentSidebar @select-document="(document)=> {documentSelected(document)}" ref="docside"></DocumentSidebar>
       <div class="h-full w-full flex justify-center items-center">
         <RTE ref="rte" v-show="show_rte"/>
       </div>

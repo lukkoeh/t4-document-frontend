@@ -30,7 +30,7 @@ onMounted(()=>{
     console.log("no token found")
     return;
   }
-  let tempurl = "http://localhost:10001/user/" + localStorage.getItem("user_id");
+  let tempurl = "http://host.docker.internal:10001/user/" + localStorage.getItem("user_id");
   axios({
     method: "get",
     url: tempurl,
@@ -54,7 +54,7 @@ function save() {
   if (!localStorage.getItem("token")) {
     return;
   }
-  let tempurl = "http://localhost:10001/user/" + localStorage.getItem("user_id");
+  let tempurl = "http://host.docker.internal:10001/user/" + localStorage.getItem("user_id");
   axios({
     method: "patch",
     url: tempurl,
@@ -82,7 +82,7 @@ function updatePassword() {
   if (new_pw.value !== new_pw_confirm.value) {
     return;
   }
-  let tempurl = "http://localhost:10001/auth/password/" + localStorage.getItem("user_id");
+  let tempurl = "http://host.docker.internal:10001/auth/password/" + localStorage.getItem("user_id");
   axios({
     method: "patch",
     url: tempurl,
@@ -107,7 +107,7 @@ function handleAccountDeletion() {
   if (u_sure.value) {
     return;
   }else {
-    let tempurl = "http://localhost:10001/user/" + localStorage.getItem("user_id");
+    let tempurl = "http://host.docker.internal:10001/user/" + localStorage.getItem("user_id");
     axios({
       method: "delete",
       url: tempurl,

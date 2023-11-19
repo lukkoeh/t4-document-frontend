@@ -18,7 +18,7 @@ function login() {
   axios(
     {
       method: "post",
-      url: "http://localhost:10001/auth/login",
+      url: "http://host.docker.internal:10001/auth/login",
       data: formdata,
     }
   ).then((res) => {
@@ -45,7 +45,7 @@ function register() {
   axios(
       {
         method: "post",
-        url: "http://localhost:10001/user",
+        url: "http://host.docker.internal:10001/user",
         data: formdata
       }
   ).then((res)=> {

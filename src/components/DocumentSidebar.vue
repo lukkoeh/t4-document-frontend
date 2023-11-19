@@ -14,6 +14,7 @@ defineExpose({load});
 const emit = defineEmits(["select-document"]);
 
 onMounted(() => {
+
   // if logged in
   if (localStorage.getItem("token")) {
     load();
@@ -25,7 +26,7 @@ function load() {
   // if the user is logged in
   if (localStorage.getItem("token")) {
     // request the documents
-    let tempurl = "http://localhost:10001/documents/" + localStorage.getItem("user_id");
+    let tempurl = "http://host.docker.internal:10001/documents/" + localStorage.getItem("user_id");
     axios({
       method: "get",
       url: tempurl,
@@ -53,7 +54,7 @@ function createDocument() {
   // if the user is logged in
   if (localStorage.getItem("token")) {
     // request the documents
-    let tempurl = "http://localhost:10001/document/";
+    let tempurl = "http://host.docker.internal:10001/document/";
     let formdata = new FormData();
     if (newdocname.value === "") {
       newdocname.value = "Untitled Document";
@@ -83,7 +84,7 @@ function removeDocument(id) {
   // if the user is logged in
   if (localStorage.getItem("token")) {
     // request the documents
-    let tempurl = "http://localhost:10001/document/" + id;
+    let tempurl = "http://host.docker.internal:10001/document/" + id;
     axios({
       method: "delete",
       url: tempurl,
@@ -106,7 +107,7 @@ function shareDocument() {
   // if the user is logged in
   if (localStorage.getItem("token")) {
     // request the documents
-    let tempurl = "http://localhost:10001/share/" + current_share_doc_id.value + "/" + target_share_id.value;
+    let tempurl = "http://host.docker.internal:10001/share/" + current_share_doc_id.value + "/" + target_share_id.value;
     axios({
       method: "post",
       url: tempurl,
