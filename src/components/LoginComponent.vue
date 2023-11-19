@@ -65,7 +65,7 @@ const loginform = ref(false);
 </script>
 
 <template>
-  <div class="w-screen h-screen flex justify-center items-center fixed top-0 left-0">
+  <div class="w-screen h-screen flex justify-center items-center fixed top-0 left-0 z-40">
     <div class="w-1/2 flex flex-col">
       <div class="flex items-center justify-evenly w-full bg-slate-700 text-white">
         <h2 class="p-5 w-full text-center" :class="{ 'bg-slate-800': loginform }" @click="loginform = true">Login</h2>

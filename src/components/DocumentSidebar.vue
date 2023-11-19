@@ -129,6 +129,7 @@ function changeDocument(doc) {
 <template>
   <div class="w-1/5 h-full text-center text-white py-10 flex flex-col gap-5 items-center bg-slate-700">
     <h1 class="text-2xl">Your Documents</h1>
+    <button @click="load" class="bg-blue-600 p-3 w-4/5 rounded">Refresh</button>
     <div class="overflow-y-scroll h-4/5 w-full flex flex-col items-center gap-5 scrollbar-hide">
       <div @click="changeDocument(document)" v-for="document in documents" :key="document.document_id" class="w-4/5 bg-slate-900 rounded-2xl p-5 flex flex-col gap-2">
         <p>{{ document.document_title }}</p>

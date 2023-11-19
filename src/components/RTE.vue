@@ -78,8 +78,16 @@ function loadDocument(doc) {
     }
   }).then((res) => {
     // if there are no deltas, just use a blank editor
+    let data = JSON.stringify({
+      token: token.value,
+      document_selection: current_document.value
+    });
+    console.log(data)
+    // send the json to the socket
+    socket_connection.value.send(data);
+    $toast.success("Document selected for live session")
     if (res.data.length === 0) {
-      return;
+      console.log("no deltas");
     }
     let deltas = res.data;
     let newdelta = new Delta();
@@ -90,16 +98,7 @@ function loadDocument(doc) {
     console.log(newdelta);
     // set the editor contents to the newdelta
     quilleditor.value.setContents(newdelta, "api");
-    const $toast = useToast();
     $toast.success("Document loaded");
-    let data = JSON.stringify({
-      token: token.value,
-      document_selection: current_document.value
-    });
-    console.log(data)
-    // send the json to the socket
-    socket_connection.value.send(data);
-    $toast.success("Document selected for live session")
   }).catch(() => {
     console.log("error");
   });
