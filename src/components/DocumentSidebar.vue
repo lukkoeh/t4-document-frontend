@@ -34,15 +34,15 @@ function load() {
       }
     }).then((res) => {
       // if response code is 404, the user has no documents, directly create one
-      if (res.status === 404) {
-        $toast.info("No documents found, creating one");
-        createDocument();
-        return;
-      }
       console.log(res.data);
       documents.value = res.data;
       $toast.info("Updated documents list");
     }).catch((err) => {
+      if (err.response.status === 404) {
+        $toast.info("No documents found, creating one");
+        createDocument();
+        return;
+      }
       console.log(err);
     });
   }
@@ -55,6 +55,9 @@ function createDocument() {
     // request the documents
     let tempurl = "http://localhost:10001/document/";
     let formdata = new FormData();
+    if (newdocname.value === "") {
+      newdocname.value = "Untitled Document";
+    }
     formdata.append("title", newdocname.value);
     axios({
       method: "post",
